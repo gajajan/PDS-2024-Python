@@ -1,0 +1,156 @@
+\documentclass{beamer}
+\usepackage{hyperref}
+\usepackage[czech]{babel}
+
+%\usetheme{Boadilla}
+\usetheme{default}
+\usecolortheme{seahorse}
+\definecolor{myblue}{rgb}{0.2, 0.2, 0.6}
+\setbeamertemplate{caption}{{\color{myblue}Obrázek:} \raggedright\insertcaption\par}
+\setbeamertemplate{footline}[frame number] 
+
+\newcommand{\authorname}{Dluhoš Matěj, Gaja Jan, Gajdošík Petr, Jurásek Petr, Phan Thanh Tú, Jan Rádl}
+\newcommand{\authorsshort}{Dluhoš, Gaja, Gajdošík, Jurásek, Phan, Rádl}
+\newcommand{\thesisname}{PDS: Python}
+
+\title{\thesisname}
+\author{\authorname}
+\institute{Univerzita Palackého v Olomouci}
+\date{\today}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.4\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\authorsshort
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\thesisname
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+%\logo{\includegraphics[height=1cm]{UP_logo.png}}
+\usepackage{tikz}
+\addtobeamertemplate{headline}{}{%
+    \begin{tikzpicture}[overlay, remember picture]
+    	\ifnum\insertframenumber>1
+        	\node[anchor=north east, inner sep=5pt] at (current page.north east) {\includegraphics[height=1cm]{obrazky/UP_logo.png}};
+        \fi
+    \end{tikzpicture}
+}
+
+\setbeamercolor{titlelike}{bg=,fg=}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}{Obsah}
+	\tableofcontents
+\end{frame}
+
+\section{Úvod do Pythonu s paralelismem}
+\subsection{Historie a zaměření}
+\begin{frame}{Historie a zaměření}
+	\begin{itemize}
+		\item Vytvořen \textbf{Guidem van Rossumem} v roce \textbf{1991}.
+	\end{itemize}
+	\begin{itemize}
+		\item Jednoduchost a čitelnost kódu.
+		\item Vysoká produktivita programátorů.
+		\item Univerzální použití: od webových aplikací přes vědecké výpočty až po strojové učení.
+	\end{itemize}
+\end{frame}
+
+\subsection{Paralelismus v Pythonu}
+\begin{frame}{Paralelismus v Pythonu}
+	\begin{itemize}
+		\item Python získal základní podporu paralelismu prostřednictvím vláken ve verzi 1.5.2 (1999).
+		\item Zaveden \textbf{GIL} (Global Interpreter Lock)
+		\begin{itemize}
+			\item [\textendash] Usnadnilo integraci nativního kódu v C.
+			\item [\textendash] Vyřešilo problémy s přístupem ke sdíleným datům ve více vláknech.
+			\item [\textendash] Optimalizovalo výkon na systémech s jedním jádrem.
+			\item [\textendash] Omezuje paralelní výkon na vícejádrových procesorech.
+			\item [\textendash] Vede k neefektivnímu využití vláken u \textbf{CPU-bound} úloh.
+			\item [\textendash] \hypersetup{urlcolor=blue} \href{https://peps.python.org/pep-0703/}{PEP 703} - Making the Global Interpreter Lock Optional in CPython 
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\subsection{Proč odstranit GIL?}
+\begin{frame}{Proč odstranit GIL?}
+	\begin{itemize}
+		\item Většina zařízení dnes obsahuje vícejádrové procesory, kde GIL představuje významné omezení.
+		\item Efektivnější paralelní výpočty, například v oblastech umělé inteligence nebo numerických simulacích.
+		\item Výzvy při odstranění GIL:
+		\begin{itemize}
+			\item [\textendash] Potřeba bezpečného a efektivního spravování sdílené paměti (například více zamykání nebo jiných synchronizačních mechanismů).
+			\item [\textendash] Zvýšení složitosti implementace interpretu Pythonu.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\subsection{Komunikační model Pythonu}
+\begin{frame}{Komunikační model Pythonu}
+
+\end{frame}
+
+\section{Synchronizační nástroje standardní knihovny}
+\subsection{Knihovna threading}
+\begin{frame}{Knihovna threading}
+
+
+\end{frame}
+
+\subsection{Knihovna multiprocessing}
+\begin{frame}{Knihovna multiprocessing}
+
+\end{frame}
+
+\subsection{Knihovna concurrent.futures}
+\begin{frame}{Knihovna concurrent.futures}
+
+\end{frame}
+
+\subsection{Knihovna asyncio}
+\begin{frame}{Knihovna asyncio}
+
+\end{frame}
+
+\section{Nástroje externích knihoven}
+\begin{frame}{Nástroje externích knihoven}
+
+\end{frame}
+
+\section{Nástroje pro distribuované systémy}
+\subsection{Knihovna socket}
+\begin{frame}{Knihovna socket}
+
+\end{frame}
+
+\subsection{Knihovna http.server}
+\begin{frame}{Knihovna http.server}
+
+\end{frame}
+
+\subsection{RabbitMQ}
+\begin{frame}{RabbitMQ}
+
+\end{frame}
+
+\subsection{Další nástroje}
+\begin{frame}{Další nástroje}
+
+\end{frame}
+
+\end{document}

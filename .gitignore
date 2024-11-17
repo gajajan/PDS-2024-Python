@@ -1,0 +1,12 @@
+
+.DS_Store
+*.aux
+*.bbl
+*.blg
+*.log
+*.nav
+*.out
+*.snm
+*.gz
+*.toc
+presentation/prezentace.pdf

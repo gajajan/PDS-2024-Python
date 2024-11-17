@@ -1,0 +1,67 @@
+name: Build Beamer Presentation
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Install minimal TeX Live packages
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y \
+            texlive-latex-base \
+            texlive-latex-recommended \
+            texlive-fonts-recommended \
+            texlive-latex-extra \
+            texlive-lang-czechslovak
+
+      - name: Clean previous build files
+        run: rm -f presentation/*.pdf presentation/*.aux presentation/*.log
+
+      - name: Compile Beamer Presentation
+        run: |
+          pdflatex -output-directory=presentation presentation/prezentace.tex
+          pdflatex -output-directory=presentation presentation/prezentace.tex
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: beamer-presentation
+          path: presentation/prezentace.pdf
+
+      - name: Upload PDF to Existing Release via GitHub API
+        run: |
+          # Extract the tag name (triggered by the tag push)
+          TAG_NAME="${{ github.ref_name }}"
+
+          # Fetch the release associated with the tag
+          release_response=$(curl -X GET \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/releases/tags/$TAG_NAME)
+
+          # Extract the upload URL from the response
+          upload_url=$(echo "$release_response" | jq -r '.upload_url')
+          if [ -z "$upload_url" ] || [ "$upload_url" == "null" ]; then
+            echo "Error: Failed to find release for tag $TAG_NAME or extract upload_url."
+            echo "$release_response"
+            exit 1
+          fi
+          upload_url=$(echo "$upload_url" | sed 's/{?name,label}//')
+
+          # Debug: Print upload_url
+          echo "Upload URL: $upload_url"
+
+          # Upload the PDF file to the release
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: application/octet-stream" \
+            --data-binary @presentation/prezentace.pdf \
+            "$upload_url?name=prezentace.pdf&label=prezentace.pdf"
