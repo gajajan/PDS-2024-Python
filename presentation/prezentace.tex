@@ -107,24 +107,306 @@
 
 \section{Synchronizační nástroje standardní knihovny}
 \subsection{Knihovna threading}
+
 \begin{frame}{Knihovna threading}
+    \begin{itemize}
+        \item Vestavený modul pro paralelní spouštění vláken
+        \item Omezena GIL
+        \item Vlákna využívají stejný paměťový prostor
+        \vskip 0.35in
+        \item Často využíváné pro:
+        \begin{itemize}
+            \item I/O operace (Read/Write, Síťování, user input)
+            \item Grafické uživatelské rozhraní 
+        \end{itemize}
+    \end{itemize}
+\end{frame}
 
+\begin{frame}[fragile]{Třída Thread}
+    \begin{itemize}
+        \item Instance reprezentuje vlákno
+        \item Předání funkce a argumentů
+        \vskip 0.2in
 
+        \item \textit{start()} - spustí vytvořené vlákno
+        \item \textit{join()} – Počká na dokončení práce vlákna
+        \item \textit{is\_alive()} – Pracuje stále vlákno?
+        \item \textit{local()} – data konkrétního vlákna
+
+        \vskip 0.2in
+        \item Při práci s vlákny může dojít k synchronizačním problémům
+        \item Modul poskytuje mnoho synchronizačních nástrojů
+    \end{itemize}
+    \scriptsize
+    \begin{semiverbatim}
+    t = threading.Thread(target=some_function, args=(some_arg,))
+    t.start()
+    # Nějaký kód
+    t.join()
+    \end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Lock}
+    \begin{itemize}
+            \item Zajistí, že ke sdíleným zdrojům bude mít přítup pouze jedno vlákno
+            \item Můžeme zamknou příkaz nebo skupinu příkazu
+
+            \vskip 0.15in
+            \item \textit{acquire()} – zamkne objekt
+            \item \textit{release()} – odemkne objekt
+            \item klíčové slovo with - zamkne/odemkne blok automaticky
+
+            \vskip 0.15in
+            \item Varianta \textbf{RLock} pro rekurzivní funkce
+    \end{itemize}
+    \scriptsize
+    \begin{semiverbatim}
+    lock = threading.Lock()
+
+    def function():
+	    # Nějaký kód
+	    with lock:  
+	        # Další kód
+    \end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Semaphore}
+    \begin{itemize}
+        \item Dokáže omezit počet vláken, které mají přístup ke zdroji
+        \item Konstruktor očekává value, určuje maximální počet přístupů ke zdroji
+        \newline (Varianta Binary Semaphore – maximálně 1 přístup)
+
+        \vskip 0.25in
+        \item \textit{acquire()} – zjistí jestli je count $>$ 0, pokud ano, dekrementuje count, jinak zablokuje vlákno
+        \item \textit{release()} – inkrementuje count, umožní tak dalšímu vláknu přístup
+        \item Opět with statement dělá automaticky
+    \end{itemize}
+    \scriptsize
+    \begin{semiverbatim}
+    sem = threading.Semaphore(limit)
+
+    def function():
+        # Nějaký kód
+        with sem:
+            # kritická sekce
+    \end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Barrier}
+    \begin{itemize}
+        \item Umožňuje zablokovat vlákna, dokud všechna nedojdou na určité místo v programu
+        \item Až všechna vlákna dosáhnou bariéry, pokračují dál v práci
+        \item Vhodné pokud vlákna pracují ve fázích, kdy po dokončení jedné se spustí další
+
+        \vskip 0.25in
+        \item \textit{wait()} – Místo, kde se vlákno zastaví, dokud ostatní vlákna k němu nedojdou
+    \end{itemize}
+    \scriptsize
+    \begin{semiverbatim}
+    barrier = threading.Barrier(limit)
+
+    def function():
+        # Nějaký kód
+        barrier.wait()
+        # Další kód
+    \end{semiverbatim}
+\end{frame}
+
+\begin{frame}{Event}
+    \begin{itemize}
+        \item Jednoduchý mechanizmus, který umožňuje signalizaci mezi vlákny
+        \item Používá interní příznak, který nabývá hodnoty True nebo False
+        \vskip 0.25in
+
+        \item \textit{wait()} – vlákna budou blokována, dokud nebude flag nastaven na True
+        \item \textit{set()} – Nastaví flag na True, vlákna volající wait() budou propuštěna
+        \item \textit{clear()} – Nastaví flag na False, vlákna volající wait() budou zablokována
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Event}
+    \begin{semiverbatim}
+    event = threading.Event()
+
+    def function1():
+    	# Nějaký kód
+    	event.wait()
+    	# Další kód
+    
+    def function2():
+    	# Nějaký kód
+    	event.set()
+    	# Další kód  
+    \end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Condition}
+    \begin{itemize}
+        \item Funguje obdobně, ale používá se současně se zámkem
+
+        \vskip 0.25in
+        \item \textit{wait()} – stejné, ale navíc odemkne zámek
+        \item \textit{notify()} – odblokuje jedno čekající vlákno
+        \item \textit{notify\_all()} – odblokuje všechna čekající vlákna
+    \end{itemize}
+    \scriptsize
+    \begin{semiverbatim}
+    cond = threading.Condition()
+
+    def function1():
+    	with cond:
+    		# Nějaký kód
+    		cond.wait()
+    		# Další kód
+    
+    def function2():
+    	with cond:
+    		# Nějaký kód
+    		cond.notify()
+    		# Další kód
+    \end{semiverbatim}
 \end{frame}
 
 \subsection{Knihovna multiprocessing}
 \begin{frame}{Knihovna multiprocessing}
-
+    \begin{itemize}
+        \item Modul pro paralelizaci procesů
+        \item Nepracuje s vlákny ale s procesy
+        \item Umožňuje překonat limitace GIL
+        \item Vhodné pro složitější výpočty
+        
+        \vskip 0.3in
+        \item Výhody:
+        \begin{itemize}
+            \item Každý vytvořený proces běží nezávisle a může být vykonáván na jiných jádrech procesoru
+            \item Všechny procesy mají vlastní paměť
+            \item Vestavené metody pro bezpečnou práci se sdílenými prostředky
+        \end{itemize}
+    \end{itemize}
 \end{frame}
 
-\subsection{Knihovna concurrent.futures}
-\begin{frame}{Knihovna concurrent.futures}
+\begin{frame}[fragile]{Třída Proces}
+    \begin{itemize}
+        \item Instance reprezentuje jeden nezávislý proces
+        \item Tvorba stejná jako u threading
+        \item Stejné funkce
+        \vskip 0.25in
 
+        \item Využití Pool
+        \begin{itemize}
+            \item Umožňuje efektivně spravovat procesy
+            \item Automatizuje jejich tvorbu a rozdělení mezi jádra CPU
+            \item \textit{map()} - pro paralelní provedení funkce na každý prvek z kolekce dat
+        \end{itemize}
+    \end{itemize}
+    \scriptsize
+    \begin{semiverbatim}
+    pool = Pool(processes=num_of_processes) 
+    result = pool.map(some_function, iterable_data)
+    \end{semiverbatim}  
+\end{frame}
+
+\begin{frame}{Data a komunikace}
+    \begin{itemize}
+        \item Sdílení dat
+        \begin{itemize}
+            \item Modul poskytuje objekty Array a Value pro sdílení dat mezi procesy
+        \end{itemize}
+
+        \item Komunikace
+        \begin{itemize}
+            \item Pro plné využití síly procesů je potřeba komunikace mezi nimi
+            \item Objekty Queue a Pipe pro zasílání zpráv
+            \item S Queue se pracuje stejně jako s klasickou frontou
+            \item Pipe je vhodnější pro komunikaci mezi pouze dvěma procesy
+        \end{itemize}
+        \item Synchronizace
+        \begin{itemize}
+            \item Stejné nástroje pro synchronizaci jako v modulu threading
+            \item Lock, Semaphore, Barrier, Event, Condition
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Data a komunikace}
+    \scriptsize
+    \begin{semiverbatim}
+    value = Value('i', init_value)  
+    result = Array('i', size)
+    
+    def example_function(data,value,result):  
+        for i, num in range(5):  
+            result[i] = num * num  
+            value.value += num
+
+    q = multiprocessing.Queue()
+    conn1, conn2 = multiprocessing.Pipe()
+
+    def producer(conn,q):
+        q.put("Queue Message")
+        conn.send("Pipe Message")
+        conn.close()
+
+    def consumer(conn,q):
+        msg = q.get()
+        print(msg)
+        msg = conn.recv()
+        print(msg)
+        conn.close()
+    \end{semiverbatim}
 \end{frame}
 
 \subsection{Knihovna asyncio}
 \begin{frame}{Knihovna asyncio}
+    \begin{itemize}
+        \item Umožňuje asynchronní zpracování vstupně-výstupních operací
+        \item Založeno na kooperativním multitaskingu
+        \item Můžeme se tak vyhnout nečinnosti při čekání na dokončení I/O operací
+        \item Vhodné pro síťové operace, práce s databází, čtení souborů…
+        
+        \vskip 0.35in
+        \item \textbf{Event Loop} – koordinuje spuštění asynchronních operací
+        \item \textbf{Coroutine} – speciální asynchronní funkce
+        \item \textbf{Task} – zajišťuje běh coroutine v event loopu
+        \item \textbf{Future} – Předběžný výsledek operace, která nebyla ještě dokončena
+    \end{itemize}
+\end{frame}
 
+\begin{frame}{Třída Task}
+    \begin{itemize}
+        \item Při vytváření Tasku předáváme korutinu
+        \item Následně je její běh naplánován Event Loopem
+        \item Metody pro práci s Tasky během toho co se vykonávají
+        \begin{itemize}
+            \item \textit{.result()}
+            \item \textit{.exception()}
+            \item \textit{.cancel()}
+        \end{itemize}
+        
+        \vskip 0.25in
+        \item Další užitečné nástroje
+        \begin{itemize}
+            \item Stejné synchronizační nástroje jako v předchozích modulech
+
+            \item \textit{.wait\_for()} umožňuje nastavit maximální čas čekání na dokončení. Vyvolává TimeoutError
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Třída Task}
+    \scriptsize
+    \begin{semiverbatim}
+    async def coroutine(): 
+    	do_something()
+    	# Simulace nějaké I/O operace, na kterou je potřeba počkat
+    	await asyncio.sleep(1) 
+
+    async def main():
+        task = asyncio.create_task(coroutine(arg))
+        await task
+
+    asyncio.run(main())
+    \end{semiverbatim}
 \end{frame}
 
 \section{Nástroje externích knihoven}
