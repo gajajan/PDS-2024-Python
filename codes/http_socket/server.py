@@ -2,26 +2,26 @@ import socket
 import threading
 import struct
 import time
+import pickle  # Přidání knihovny pickle
 from typing import Tuple
 
-
-#jednoduchá databáze
-database = {1:["Karel", "Novy"], 2:["Marek", "Modry"]}
+# Jednoduchá databáze
+database = {1: ["Karel", "Novy", 5], 2: ["Marek", "Modry", 99]}
 
 # Globální proměnná pro kontrolu, zda má server běžet
 server_running = True
 
 def print_database():
     print("\n")
-    print(f"{'ID':<5} | {'Name':<10} | {'Lastname':<10}")
-    print("-" * 31)
+    print(f"{'ID':<5} | {'Name':<10} | {'Lastname':<10} | {'Age':<5}")
+    print("-" * 39)
 
     for key, value in database.items():
-        print(f"{key:<5} | {value[0]:<10} | {value[1]:<10}")
+        print(f"{key:<5} | {value[0]:<10} | {value[1]:<10} | {value[2]:<5}")
     print("\n")
 
 # Funkce pro obsluhu každého klienta
-def handle_client(client_socket: socket.socket, client_address: Tuple[str,int]) -> None:
+def handle_client(client_socket: socket.socket, client_address: Tuple[str, int]) -> None:
     global server_running
     
     try:
@@ -31,25 +31,29 @@ def handle_client(client_socket: socket.socket, client_address: Tuple[str,int]) 
 
         # Přijme požadovaná data (data_length bytů)
         data = client_socket.recv(data_length)
-        msg = data.decode('utf-8')
+        # Deserializace dat pomocí pickle
+        msg = pickle.loads(data)
         print(f"Přijato: {msg}")
 
         # Odeslání odpovědi zpět klientovi
-        client_socket.sendall(b"Data prijata!")
+        response = pickle.dumps("Data prijata!")
+        response_length = struct.pack("I", len(response))
+        client_socket.sendall(response_length + response)
 
         # Zpracování zprávy
         if msg == '!STOP':
             print("Příkaz pro zastavení serveru přijat.")
             server_running = False
-        elif msg not in database.items():
-            database[len(database)+1] = msg.split(" ",1)
+        elif isinstance(msg, tuple) and len(msg) == 3:
+            # Přidání n-tice do databáze
+            database[len(database) + 1] = list(msg)
 
     except Exception as e:
         print(f"Chyba při zpracování klienta {client_address}: {e}")
     finally:
         client_socket.close()
 
-# server
+# Server
 def start_server() -> None:
     global server_running
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -77,7 +81,7 @@ def start_server() -> None:
             print("Server je zastaven.")
             break
 
-        time.sleep(1)  # Na chvili spime
+        time.sleep(1)  # Na chvíli spíme
 
     # Zastavení serveru
     print("Server byl zastaven.")
