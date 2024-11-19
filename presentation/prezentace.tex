@@ -9,7 +9,7 @@
 \setbeamertemplate{caption}{{\color{myblue}Obrázek:} \raggedright\insertcaption\par}
 \setbeamertemplate{footline}[frame number] 
 
-\newcommand{\authorname}{Dluhoš Matěj, Gaja Jan, Gajdošík Petr, Jurásek Petr, Phan Thanh Tú, Jan Rádl}
+\newcommand{\authorname}{Dluhoš Matěj, Gaja Jan, Gajdošík Petr, Jurásek Petr, Phan Thanh Tú, Rádl Jan}
 \newcommand{\authorsshort}{Dluhoš, Gaja, Gajdošík, Jurásek, Phan, Rádl}
 \newcommand{\thesisname}{PDS: Python}
 
@@ -61,49 +61,127 @@
 \section{Úvod do Pythonu s paralelismem}
 \subsection{Historie a zaměření}
 \begin{frame}{Historie a zaměření}
-	\begin{itemize}
-		\item Vytvořen \textbf{Guidem van Rossumem} v roce \textbf{1991}.
-	\end{itemize}
-	\begin{itemize}
-		\item Jednoduchost a čitelnost kódu.
-		\item Vysoká produktivita programátorů.
-		\item Univerzální použití: od webových aplikací přes vědecké výpočty až po strojové učení.
-	\end{itemize}
+    \begin{columns}
+        \column{0.55\textwidth}
+        \begin{itemize}
+            \item Vytvořen \textbf{Guidem van Rossumem} v roce \textbf{1991}.
+            \item Jednoduchost a čitelnost kódu.
+            \item Vysoká produktivita programátorů.
+            \item Univerzální použití: od webových aplikací přes vědecké výpočty až po strojové učení.
+            \item Python získal základní podporu paralelismu prostřednictvím vláken ve verzi 1.5.2 (1999).
+        \end{itemize}
+        
+        \column{0.45\textwidth}
+        \begin{figure}
+        		\includegraphics[width=0.75\textwidth]{obrazky/Guido_van_Rossum.jpg}
+        		\caption{Guido van Rossum}
+      		\end{figure}
+    \end{columns}
 \end{frame}
 
-\subsection{Paralelismus v Pythonu}
-\begin{frame}{Paralelismus v Pythonu}
+\subsection{GIL - Global Interpreter Lock}
+\begin{frame}{Co to je GIL a proč je potřeba?}
+	\textbf{Co to je GIL?}
 	\begin{itemize}
-		\item Python získal základní podporu paralelismu prostřednictvím vláken ve verzi 1.5.2 (1999).
-		\item Zaveden \textbf{GIL} (Global Interpreter Lock)
-		\begin{itemize}
-			\item [\textendash] Usnadnilo integraci nativního kódu v C.
-			\item [\textendash] Vyřešilo problémy s přístupem ke sdíleným datům ve více vláknech.
-			\item [\textendash] Optimalizovalo výkon na systémech s jedním jádrem.
-			\item [\textendash] Omezuje paralelní výkon na vícejádrových procesorech.
-			\item [\textendash] Vede k neefektivnímu využití vláken u \textbf{CPU-bound} úloh.
-			\item [\textendash] \hypersetup{urlcolor=blue} \href{https://peps.python.org/pep-0703/}{PEP 703} - Making the Global Interpreter Lock Optional in CPython 
-		\end{itemize}
+		\item GIL je mutex umožňující pouze jednomu vláknu mít kontrolu nad Python interpreterem.
 	\end{itemize}
-\end{frame}
-
-\subsection{Proč odstranit GIL?}
-\begin{frame}{Proč odstranit GIL?}
+	\textbf{Proč je potřeba?}
 	\begin{itemize}
-		\item Většina zařízení dnes obsahuje vícejádrové procesory, kde GIL představuje významné omezení.
-		\item Efektivnější paralelní výpočty, například v oblastech umělé inteligence nebo numerických simulacích.
-		\item Výzvy při odstranění GIL:
-		\begin{itemize}
-			\item [\textendash] Potřeba bezpečného a efektivního spravování sdílené paměti (například více zamykání nebo jiných synchronizačních mechanismů).
-			\item [\textendash] Zvýšení složitosti implementace interpretu Pythonu.
-		\end{itemize}
+		\item Správa paměti v CPythonu není bezpečná pro více vláken.
+		\item Python využívá počítání referencí.
+		\item Problém nastane, když dvě vlákna současně zvyšují nebo snižují referenci.
+		\item To vede k úniku nebo k nesprávnému uvolnění paměti.
 	\end{itemize}
 \end{frame}
 
-\subsection{Komunikační model Pythonu}
-\begin{frame}{Komunikační model Pythonu}
-
+\subsection{Rozdíl vláken a procesů}
+\begin{frame}{Vlákno}
+	\begin{itemize}
+		\item Entita v rámci procesu.
+		\item \textbf{Klíčová fakta:}
+			\begin{itemize}
+				\item [\textendash] V rámci jednoho procesu může být spuštěno více vláken.
+				\item [\textendash] Paměť je sdílena mezi všemi vlákny.
+				\item [\textendash] Spuštění vlákna je rychlejší než spuštění procesu.
+				\item [\textendash] Skvělé pro úlohy závislé na I/O.
+				\item [\textendash] Lehká paměťová náročnost.
+			\end{itemize}
+		\item \textbf{Nevýhody:}
+			\begin{itemize}
+				\item [\textendash] Jedno GIL pro všechna vlákna.
+				\item [\textendash] Multithreading nemá efekt u úloh náročných na CPU.
+				\item [\textendash] Vlákna nelze přerušit a ukončit.
+				\item [\textendash] Zvýšený potenciál vzniku chyby souběhu.
+			\end{itemize}
+	\end{itemize}
 \end{frame}
+
+\begin{frame}{Proces}
+	\begin{itemize}
+		\item Instance programu.
+		\item \textbf{Klíčová fakta:}
+			\begin{itemize}
+				\item [\textendash] Využívá více jader a procesorů.
+				\item [\textendash] Nový proces se spouští nezávisle na prvním procesu.
+				\item [\textendash] Má oddělený paměťový prostor.
+				\item [\textendash] Každý proces má svůj vlastní GIL.
+				\item [\textendash] Ideální pro úlohy náročné na CPU.
+				\item [\textendash] Procesy lze přerušit nebo ukončit.
+			\end{itemize}
+		\item \textbf{Nevýhody:}
+			\begin{itemize}
+				\item [\textendash] Spuštění procesu je pomalejší než spuštění vlákna.
+				\item [\textendash] Vyšší paměťová náročnost.
+				\item [\textendash] Složitější IPC.
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Potřebujeme vůbec GIL?}
+	\textbf{Je tedy potřeba?}
+	\begin{itemize}
+		\item V brzkých dnech Pythonu usnadnil integraci nativního kódu v C.
+		\item Vyřešil problémy s přístupem ke sdíleným datům.
+		\item Optimalizoval výkon na systémech s jedním jádrem.
+	\end{itemize}
+	\textbf{Ale...}
+	\begin{itemize}
+		\item Omezuje paralelní výkon na vícejádrových procesorech.
+		\item Vede k neefektivnímu využití vláken u CPU-bound úloh.
+	\end{itemize}
+	\textbf{\hypersetup{urlcolor=blue} \href{https://peps.python.org/pep-0703/}{PEP 703}} - Making the Global Interpreter Lock Optional in CPython.
+\end{frame}
+
+
+%\subsection{Paralelismus v Pythonu}
+%\begin{frame}{Paralelismus v Pythonu}
+%	\begin{itemize}
+%		\item Python získal základní podporu paralelismu prostřednictvím vláken ve verzi 1.5.2 (1999).
+%		\item Zaveden \textbf{GIL} (Global Interpreter Lock)
+%		\begin{itemize}
+%			\item [\textendash] Usnadnilo integraci nativního kódu v C.
+%			\item [\textendash] Vyřešilo problémy s přístupem ke sdíleným datům ve více vláknech.
+%			\item [\textendash] Optimalizovalo výkon na systémech s jedním jádrem.
+%			\item [\textendash] Omezuje paralelní výkon na vícejádrových procesorech.
+%			\item [\textendash] Vede k neefektivnímu využití vláken u \textbf{CPU-bound} úloh.
+%			\item [\textendash] \hypersetup{urlcolor=blue} \href{https://peps.python.org/pep-0703/}{PEP 703} - Making the Global Interpreter Lock Optional in CPython 
+%		\end{itemize}
+%	\end{itemize}
+%\end{frame}
+
+%\subsection{Proč odstranit GIL?}
+%\begin{frame}{Proč odstranit GIL?}
+%	\begin{itemize}
+%		\item Většina zařízení dnes obsahuje vícejádrové procesory, kde GIL představuje významné omezení.
+%		\item Efektivnější paralelní výpočty, například v oblastech umělé inteligence nebo numerických simulacích.
+%		\item Výzvy při odstranění GIL:
+%		\begin{itemize}
+%			\item [\textendash] Potřeba bezpečného a efektivního spravování sdílené paměti (například více zamykání nebo jiných synchronizačních mechanismů).
+%			\item [\textendash] Zvýšení složitosti implementace interpretu Pythonu.
+%		\end{itemize}
+%	\end{itemize}
+%\end{frame}
+
 
 \section{Synchronizační nástroje standardní knihovny}
 \subsection{Knihovna threading}

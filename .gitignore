@@ -9,4 +9,7 @@
 *.snm
 *.gz
 *.toc
+.obsidian/*
 presentation/prezentace.pdf
+presentation/prezentace.fdb_latexmk
+presentation/prezentace.fls
