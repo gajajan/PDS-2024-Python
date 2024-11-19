@@ -487,10 +487,79 @@
     \end{semiverbatim}
 \end{frame}
 
+
+\section{Poznámka: výkonnost jazyka Python}
+\begin{frame}{Poznámka: výkonnost jazyka Python}
+	\begin{itemize}
+    \item Nejde jazyk Python naproti samotné podstatě paralelizace?
+    \begin{itemize}
+      \item [\textendash] Známý pro svou nevýkonnost (daň za velkou abstrakci)      
+      \item [\textendash] GIL (dnes již volitelný)
+    \end{itemize}
+
+    \item I přes omezení GIL má paralelizace opodstatnění, pokud musí vlákna často čekat na externí události (I/O)
+    \begin{itemize}
+      \item obsluha klienta, databáze...
+      \item framework \textbf{asyncio} (asynchronní programování)
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\section{Řešení problémů paralelizace a výkonu v Pythonu}
+\begin{frame}{Řešení problémů paralelizace a výkonu v Pythonu}
+  \begin{enumerate}
+    \item Použití Multiprocessing 
+    \begin{itemize}
+      \item [\textendash] Poněkud těžkopadné
+      \item [\textendash] Náročná správa komunikace (nesdílejí paměť)
+    \end{itemize}
+
+    \item Použití jiné implementace Pythonu s JIT kompilací
+    \begin{itemize}
+      \item [\textendash] Dynamická kompilace do strojového kódu, optimalizace
+      \item [\textendash] \textbf{Numba}, PyPy, Jyphon (JVM), IronPython (CLR)\dots
+      \item [\textendash] Některé nejsou omezeny GIL
+    \end{itemize}
+
+    \item Statická kompilace do nižšího jazyka
+    \begin{itemize}
+      \item [\textendash] \href{https://cython.org/}{Cython}, \href{https://github.com/mypyc/mypyc}{mypyc}\dots
+    \end{itemize}
+
+    \item Použití externích knihoven
+    \begin{itemize}
+      \item [\textendash] Python slouží jako jakási vysokoúrovňová "fasáda"
+      \item [\textendash] Pro "CPU-bound" operace se volají metody implementované v nižších jazycích (C, C++...)
+      \item [\textendash] Tyto jazyky nejsou omezeny GIL, mohou (volně) využívat paralelizace
+    \end{itemize}
+
+    \item Nepoužívat Python
+  \end{enumerate}
+\end{frame}
+
+
 \section{Nástroje externích knihoven}
 \begin{frame}{Nástroje externích knihoven}
+	\begin{itemize}
+    \item Dask
+      \begin{itemize}
+        \item [\textendash] Navržena pro \textbf{paralelizovaný} i \textbf{distribuovaný výpočet} na rozsáhlých datech
 
+        \item [\textendash] Rozděluje úlohy do menších částí (\textit{tasks}) a vytváří graf závislostí, kterým se řídí následný výpočet
+
+        \item [\textendash] \textbf{Threaded-, Multiprocessing-, Distributed-} scheduler
+
+        \item [\textendash] Využívá dalších knihoven jako jsou NumPy, Pandas a dalších pro rychlejší nízkoúrovňové výpočty
+      \end{itemize}
+    \item Další:
+      \begin{itemize}
+        \item [\textendash] Ray
+        \item [\textendash] Celery\dots
+      \end{itemize}
+  \end{itemize}
 \end{frame}
+
 
 \section{Nástroje pro distribuované systémy}
 \subsection{Knihovna socket}
