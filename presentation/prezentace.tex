@@ -495,12 +495,121 @@
 \section{Nástroje pro distribuované systémy}
 \subsection{Knihovna socket}
 \begin{frame}{Knihovna socket}
+	\begin{itemize}
+		\item Modul \texttt{socket} je základní nástroj pro implementaci síťové komunikace.
+		\item Je \textbf{nízkoúrovňový} – jsou na něm založeny všechny ostatní moduly Pythonu vyšší úrovně pro propojení v síti.
+		\item Podporuje většinu běžných protokolů, včetně TCP a UDP.
+		\item \textbf{Výhody:}
+		\begin{itemize}
+			\item Přímá kontrola nad socketovou komunikací.
+			\item Flexibilita pro implementaci vlastních protokolů.
+		\end{itemize}
+		\item \textbf{Nevýhody:}
+		\begin{itemize}
+			\item Vyžaduje znalosti síťových protokolů.
+			\item Implementace složitější logiky (např. HTTPS) je náročnější.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
 
+\begin{frame}{Knihovna socket - tvorba socketu}
+	\begin{itemize}
+		import socket
+
+		socket = socket.socket(
+			family=AF_INET,
+			type=SOCK_STREAM
+		)
+
+		\item \texttt{family}  - určuje, jaký protokol se použije na síťové vrstvě.
+		\begin{itemize}
+			\item \texttt{socket.AF_INET} - pro IPv4 adresy.
+			\item \texttt{socket.AF_INET6} - pro IPv6 adresy.
+			\item \texttt{socket.AF_UNIX} - Unixový socket (pro lokální komunikaci mezi procesy).
+		\end{itemize}
+		\item \texttt{type} - určuje, jaký protokol se použije na transportní vrstvě.
+		\begin{itemize}
+			\item \texttt{socket.SOCK_STREAM} - používá TCP protokol.
+			\item \texttt{socket.SOCK_DGRAM} - používá UDP protokol.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Knihovna socket - odeslání zprávy}
+	s.connect(('localhost', 12345)) # navázání spojení
+	s.sendall(b'Ahoj!') #odešle všechna data
+	s.close() # ukončí socket s
+\end{frame}
+
+\begin{frame}{Knihovna socket - poslouchání  a přijímání dat}
+	addr = ('localhost', 12345) # adresa na které posloucháme
+	s.bind(addr) # přiřadí socket k adrese
+	s.listen() # umožňuje přijímat příchozí připojení
+	conn, addr = s.accept() # čeká se na příchozí připojení
+	print(f'Připojeno: {addr}')
+	data = conn.recv(1024) #přijme data, max. 1024B
+	conn.sendall(b'Ahoj!') # pošle odpověď
+	conn.close() # ukončí socket conn
+	s.close() # ukončí socket s
 \end{frame}
 
 \subsection{Knihovna http.server}
+\begin{frame}{Knihovna http}
+	\begin{itemize}
+		\item Modul \texttt{http} v Pythonu poskytuje nástroje pro práci s protokolem HTTP.
+		\item Je rozdělen na několik podmodulů:
+		\begin{itemize}
+			\item Mezi ně patří např.: \texttt{http.client}, \texttt{http.server}, \texttt{http.cookies} \ldots
+		\end{itemize}
+		\item Využívá ho mnoho vyšších knihoven, jako je \texttt{requests} nebo \texttt{flask}.
+		\item \textbf{Výhody:}
+		\begin{itemize}
+			\item Vyšší úroveň abstrakce.
+			\item Snazší implementace běžných HTTP funkcionalit.
+		\end{itemize}
+		\item \textbf{Nevýhody:}
+		\begin{itemize}
+			\item Omezená flexibilita ve srovnání s nízkoúrovňovou komunikací pomocí \texttt{socket}.
+		\end{itemize}
+	\end{itemize}	
+\end{frame}
 \begin{frame}{Knihovna http.server}
 
+	from http.server import HTTPServer, BaseHTTPRequestHandler
+
+	class MyHandler(BaseHTTPRequestHandler):
+
+		# Definujeme metodu pro zpracování GET požadavků
+		def do_GET(self):
+			pass
+
+	server = HTTPServer(("localhost", 8000), MyHandler)
+	print("Server bezi na portu 8000...")
+	server.serve_forever()
+
+	\begin{itemize}
+		\item Dva typy serverů:
+		\begin{itemize}
+			\item \texttt{http.server.HTTPServer(args)}.
+			\item \texttt{http.server.ThreadingHTTPServer(args)}.
+		\end{itemize}
+		\item Argumenty \texttt{args}:
+		\begin{itemize}
+			\item \texttt{_server_address_} - dvojice IP adresa, port.
+			\item \texttt{_RequestHandlerClass_} - zpracovává příchozí HTTP požadavky (např. GET, POST) a definuje, jak server na tyto požadavky odpoví.
+		\end{itemize}
+	\end{itemize}	
+\end{frame}
+
+\begin{frame}{Knihovna http.server}
+	def do_GET(self):
+		# Odeslání odpovědi s kódem 200 (OK)
+		self.send_response(200)
+		# Nastavení hlavičky Content-Type pro HTML obsah
+		self.send_header("Content-type", "text/html") 
+		self.end_headers()
+		# Odeslání těla odpovědi – text "Hello, World!"     
+		self.wfile.write(b"Hello, World!") 
 \end{frame}
 
 \subsection{RabbitMQ}
