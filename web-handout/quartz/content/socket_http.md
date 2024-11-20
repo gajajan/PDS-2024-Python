@@ -36,8 +36,7 @@ Při vytváření socketů specifikujeme protokoly, které bude socket používa
     - Používá UDP (nespolehlivý, bez připojení, přenos dat jako jednotlivé pakety).
 - `socket.SOCK_RAW`
 
- >[!note] Výchozí hodnoty
- >Výchozí hodnota při vytváření socketu pro parametr `family` je `socket.AF_INET` a pro parametr `type` `socket.SOCK_STREAM`. 
+Výchozí hodnota při vytváření socketu pro parametr `family` je `socket.AF_INET` a pro parametr `type` `socket.SOCK_STREAM`. 
 
 ## Odeslání zprávy:
 ```python
@@ -117,6 +116,7 @@ server.serve_forever()
  Dva typy:
 - `http.server.HTTPServer(args)`
  - `http.server.ThreadingHTTPServer(args)` identický předchozímu, používá však vlákna ke zpracování požadavků - použití vícenásobné dědičnosti `ThreadingMixIn`
+
 Argumenty `args`
 - `_server_address_` opět dvojice `host` a `port`
 - `_RequestHandlerClass_` - zpracovává příchozí HTTP požadavky (např. GET, POST) a definuje, jak server na tyto požadavky odpoví
