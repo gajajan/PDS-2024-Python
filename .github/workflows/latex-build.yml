@@ -28,8 +28,8 @@ jobs:
 
       - name: Compile Beamer Presentation
         run: |
-          pdflatex -output-directory=presentation presentation/prezentace.tex
-          pdflatex -output-directory=presentation presentation/prezentace.tex
+          pdflatex -file-line-error -output-directory=presentation presentation/prezentace.tex
+          pdflatex -file-line-error -output-directory=presentation presentation/prezentace.tex
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
