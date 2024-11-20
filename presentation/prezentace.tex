@@ -583,11 +583,11 @@
 
 \begin{frame}{Knihovna socket - tvorba socketu}
     \begin{semiverbatim}
-	import socket
+    import socket
 
     socket = socket.socket(
-    	family=AF_INET,
-    	type=SOCK_STREAM
+    	family=AF\_INET,
+    	type=SOCK\_STREAM
     )
     \end{semiverbatim}
 	\begin{itemize}
@@ -607,23 +607,23 @@
 
 \begin{frame}{Knihovna socket - odeslání zprávy}
     \begin{semiverbatim}
-	s.connect(('localhost', 12345)) # navázání spojení
-	s.sendall(b'Ahoj!') #odešle všechna data
-	s.close() # ukončí socket s
+	s.connect(('localhost', 12345)) \# navázání spojení
+	s.sendall(b'Ahoj!') \# odešle všechna data
+	s.close() \# ukončí socket s
     \end{semiverbatim}
 \end{frame}
 
 \begin{frame}{Knihovna socket - poslouchání  a přijímání dat}
     \begin{semiverbatim}
-	addr = ('localhost', 12345) # adresa na které posloucháme
-	s.bind(addr) # přiřadí socket k adrese
-	s.listen() # umožňuje přijímat příchozí připojení
-	conn, addr = s.accept() # čeká se na příchozí připojení
+	addr = ('localhost', 12345) \# adresa na které posloucháme
+	s.bind(addr) \ přiřadí socket k adrese
+	s.listen() \ umožňuje přijímat příchozí připojení
+	conn, addr = s.accept() \ čeká se na příchozí připojení
 	print(f'Připojeno: {addr}')
-	data = conn.recv(1024) #přijme data, max. 1024B
-	conn.sendall(b'Ahoj!') # pošle odpověď
-	conn.close() # ukončí socket conn
-	s.close() # ukončí socket s
+	data = conn.recv(1024) \ přijme data, max. 1024B
+	conn.sendall(b'Ahoj!') \ pošle odpověď
+	conn.close() \ ukončí socket conn
+	s.close() \ ukončí socket s
     \end{semiverbatim}
 \end{frame}
 
@@ -653,13 +653,13 @@
 
 	class MyHandler(BaseHTTPRequestHandler):
 
-		# Definujeme metodu pro zpracování GET požadavků
-		def do_GET(self):
+		 \# Definujeme metodu pro zpracování GET požadavků
+		def do\_GET(self):
 			pass
 
 	server = HTTPServer(("localhost", 8000), MyHandler)
 	print("Server bezi na portu 8000...")
-	server.serve_forever()
+	server.serve\_forever()
     \end{semiverbatim}
 
 	\begin{itemize}
@@ -678,13 +678,13 @@
 
 \begin{frame}{Knihovna http.server}
     \begin{semiverbatim}
-	def do_GET(self):
-		# Odeslání odpovědi s kódem 200 (OK)
-		self.send_response(200)
-		# Nastavení hlavičky Content-Type pro HTML obsah
-		self.send_header("Content-type", "text/html") 
-		self.end_headers()
-		# Odeslání těla odpovědi – text "Hello, World!"     
+	def do\_GET(self):
+		\# Odeslání odpovědi s kódem 200 (OK)
+		self.send\_response(200)
+		\# Nastavení hlavičky Content-Type pro HTML obsah
+		self.send\_header("Content-type", "text/html") 
+		self.end\_headers()
+		\# Odeslání těla odpovědi – text "Hello, World!"     
 		self.wfile.write(b"Hello, World!") 
     \end{semiverbatim}
 \end{frame}
