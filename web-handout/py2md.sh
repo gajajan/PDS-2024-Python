@@ -26,9 +26,9 @@ rm -rf "$OUTPUT_DIR"/*
 
 # Traverse through each file in the input directory recursively
 find "$INPUT_DIR" -type f | while read -r file; do
-  # Extract the relative path of the file
-  relative_path="${file#$INPUT_DIR/}"
-  
+  # Extract relative path to the input dir from the file path
+  relative_path=$(realpath --relative-to="$INPUT_DIR" "$file")
+
   # Construct the output path, preserving subdirectory structure
   output_path="$OUTPUT_DIR/$relative_path.md"
   
