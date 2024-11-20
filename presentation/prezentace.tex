@@ -594,14 +594,14 @@
 
 		\item \texttt{family}  - určuje, jaký protokol se použije na síťové vrstvě.
 		\begin{itemize}
-			\item \texttt{socket.AF_INET} - pro IPv4 adresy.
-			\item \texttt{socket.AF_INET6} - pro IPv6 adresy.
-			\item \texttt{socket.AF_UNIX} - Unixový socket (pro lokální komunikaci mezi procesy).
+			\item \texttt{socket.AF\_INET} - pro IPv4 adresy.
+			\item \texttt{socket.AF\_INET6} - pro IPv6 adresy.
+			\item \texttt{socket.AF\_UNIX} - Unixový socket (pro lokální komunikaci mezi procesy).
 		\end{itemize}
 		\item \texttt{type} - určuje, jaký protokol se použije na transportní vrstvě.
 		\begin{itemize}
-			\item \texttt{socket.SOCK_STREAM} - používá TCP protokol.
-			\item \texttt{socket.SOCK_DGRAM} - používá UDP protokol.
+			\item \texttt{socket.SOCK\_STREAM} - používá TCP protokol.
+			\item \texttt{socket.SOCK\_DGRAM} - používá UDP protokol.
 		\end{itemize}
 	\end{itemize}
 \end{frame}
@@ -671,8 +671,8 @@
 		\end{itemize}
 		\item Argumenty \texttt{args}:
 		\begin{itemize}
-			\item \texttt{_server_address_} - dvojice IP adresa, port.
-			\item \texttt{_RequestHandlerClass_} - zpracovává příchozí HTTP požadavky (např. GET, POST) a definuje, jak server na tyto požadavky odpoví.
+			\item \texttt{server\_address} - dvojice IP adresa, port.
+			\item \texttt{RequestHandlerClass} - zpracovává příchozí HTTP požadavky (např. GET, POST) a definuje, jak server na tyto požadavky odpoví.
 		\end{itemize}
 	\end{itemize}	
 \end{frame}
