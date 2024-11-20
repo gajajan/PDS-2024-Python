@@ -5,8 +5,8 @@ on:
     tags:
       - "v*"
   pull_request_target:
-    types:
-      - assigned
+    branches:
+      - main
 
 permissions:
   contents: write
