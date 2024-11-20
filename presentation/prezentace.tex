@@ -583,12 +583,14 @@
 
 \begin{frame}{Knihovna socket - tvorba socketu}
 	\begin{itemize}
+        \begin{semiverbatim}
 		import socket
 
 		socket = socket.socket(
 			family=AF_INET,
 			type=SOCK_STREAM
 		)
+        \end{semiverbatim}
 
 		\item \texttt{family}  - určuje, jaký protokol se použije na síťové vrstvě.
 		\begin{itemize}
@@ -605,12 +607,15 @@
 \end{frame}
 
 \begin{frame}{Knihovna socket - odeslání zprávy}
+    \begin{semiverbatim}
 	s.connect(('localhost', 12345)) # navázání spojení
 	s.sendall(b'Ahoj!') #odešle všechna data
 	s.close() # ukončí socket s
+    \end{semiverbatim}
 \end{frame}
 
 \begin{frame}{Knihovna socket - poslouchání  a přijímání dat}
+    \begin{semiverbatim}
 	addr = ('localhost', 12345) # adresa na které posloucháme
 	s.bind(addr) # přiřadí socket k adrese
 	s.listen() # umožňuje přijímat příchozí připojení
@@ -620,6 +625,7 @@
 	conn.sendall(b'Ahoj!') # pošle odpověď
 	conn.close() # ukončí socket conn
 	s.close() # ukončí socket s
+    \end{semiverbatim}
 \end{frame}
 
 \subsection{Knihovna http.server}
@@ -643,7 +649,7 @@
 	\end{itemize}	
 \end{frame}
 \begin{frame}{Knihovna http.server}
-
+    \begin{semiverbatim}
 	from http.server import HTTPServer, BaseHTTPRequestHandler
 
 	class MyHandler(BaseHTTPRequestHandler):
@@ -655,6 +661,7 @@
 	server = HTTPServer(("localhost", 8000), MyHandler)
 	print("Server bezi na portu 8000...")
 	server.serve_forever()
+    \end{semiverbatim}
 
 	\begin{itemize}
 		\item Dva typy serverů:
@@ -671,6 +678,7 @@
 \end{frame}
 
 \begin{frame}{Knihovna http.server}
+    \begin{semiverbatim}
 	def do_GET(self):
 		# Odeslání odpovědi s kódem 200 (OK)
 		self.send_response(200)
@@ -679,6 +687,7 @@
 		self.end_headers()
 		# Odeslání těla odpovědi – text "Hello, World!"     
 		self.wfile.write(b"Hello, World!") 
+    \end{semiverbatim}
 \end{frame}
 
 \subsection{RabbitMQ}
