@@ -49,10 +49,9 @@ jobs:
           name: public
           path: ./web-handout/quartz/public
 
-  deploy-pr-preview:
+  deploy:
     runs-on: ubuntu-22.04
     needs: build
-    if: github.event_name == 'pull_request_target'
 
     steps:
       - name: Checkout repository
@@ -66,24 +65,14 @@ jobs:
 
       - name: Deploy PR preview
         uses: rossjrw/pr-preview-action@v1
+        if: github.event_name == 'pull_request_target'
         with:
           source-dir: web-handout/quartz/public
 
-  deploy-release:
-    runs-on: ubuntu-22.04
-    needs: build
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
-
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: public
-          path: ./public
-
       - name: Deploy to GitHub Pages release
         uses: JamesIves/github-pages-deploy-action@v4
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
         with:
           clean-exclude: pr-preview/
           force: false
-          folder: ./public
+          folder: web-handout/quartz/public
