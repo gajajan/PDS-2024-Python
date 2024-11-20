@@ -79,10 +79,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: public
+          path: ./public
 
       - name: Deploy to GitHub Pages release
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           clean-exclude: pr-preview/
           force: false
-          folder: public
+          folder: ./public
