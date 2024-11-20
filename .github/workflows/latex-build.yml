@@ -37,31 +37,24 @@ jobs:
           name: beamer-presentation
           path: presentation/prezentace.pdf
 
-      - name: Upload PDF to Existing Release via GitHub API
-        run: |
-          # Extract the tag name (triggered by the tag push)
-          TAG_NAME="${{ github.ref_name }}"
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
 
-          # Fetch the release associated with the tag
-          release_response=$(curl -X GET \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            https://api.github.com/repos/${{ github.repository }}/releases/tags/$TAG_NAME)
-
-          # Extract the upload URL from the response
-          upload_url=$(echo "$release_response" | jq -r '.upload_url')
-          if [ -z "$upload_url" ] || [ "$upload_url" == "null" ]; then
-            echo "Error: Failed to find release for tag $TAG_NAME or extract upload_url."
-            echo "$release_response"
-            exit 1
-          fi
-          upload_url=$(echo "$upload_url" | sed 's/{?name,label}//')
-
-          # Debug: Print upload_url
-          echo "Upload URL: $upload_url"
-
-          # Upload the PDF file to the release
-          curl -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Content-Type: application/octet-stream" \
-            --data-binary @presentation/prezentace.pdf \
-            "$upload_url?name=prezentace.pdf&label=prezentace.pdf"
+      - name: Upload release asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: presentation/prezentace.pdf
+          asset_name: prezentace.pdf
+          asset_content_type: application/pdf
