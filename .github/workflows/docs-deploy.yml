@@ -1,0 +1,88 @@
+name: Deploy Quartz site to GitHub Pages
+
+on:
+  push:
+    tags:
+      - "v*"
+  pull_request_target:
+    branches:
+      - main
+    paths:
+      - "web-handout/**"
+
+permissions:
+  contents: write
+  pages: write
+  pull-requests: write
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Load web-handout/quartz/.node-version
+        id: node-version
+        run: echo "::set-output name=node-version::$(cat web-handout/quartz/.node-version)"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.node-version.outputs.node-version }}
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: web-handout/quartz
+
+      - name: Build code snippets
+        run: ./web-handout/py2md.sh codes/ web-handout/quartz/content/codes/
+
+      - name: Build Quartz site
+        run: npx quartz build
+        working-directory: web-handout/quartz
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        id: upload
+        with:
+          name: public
+          path: ./web-handout/quartz/public
+
+  deploy-pr-preview:
+    runs-on: ubuntu-22.04
+    needs: build
+    if: github.event_name == 'pull_request_target'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: public
+          path: web-handout/quartz/public
+
+      - name: Deploy PR preview
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: web-handout/quartz/public
+
+  deploy-release:
+    runs-on: ubuntu-22.04
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/tags/v*'
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: public
+
+      - name: Deploy to GitHub Pages release
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          clean-exclude: pr-preview/
+          force: false
+          folder: public

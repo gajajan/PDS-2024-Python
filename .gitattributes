@@ -1,0 +1,3 @@
+# Exclude quartz code as linuguist-vendored (all except content)
+docs/quartz/** linguist-vendored
+docs/quartz/content/** linguist-vendored=false
