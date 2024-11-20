@@ -582,16 +582,15 @@
 \end{frame}
 
 \begin{frame}{Knihovna socket - tvorba socketu}
+    \begin{semiverbatim}
+	import socket
+
+    socket = socket.socket(
+    	family=AF_INET,
+    	type=SOCK_STREAM
+    )
+    \end{semiverbatim}
 	\begin{itemize}
-        \begin{semiverbatim}
-		import socket
-
-		socket = socket.socket(
-			family=AF_INET,
-			type=SOCK_STREAM
-		)
-        \end{semiverbatim}
-
 		\item \texttt{family}  - určuje, jaký protokol se použije na síťové vrstvě.
 		\begin{itemize}
 			\item \texttt{socket.AF\_INET} - pro IPv4 adresy.
