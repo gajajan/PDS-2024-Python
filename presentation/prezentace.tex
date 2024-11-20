@@ -710,7 +710,74 @@
 
 \subsection{RabbitMQ}
 \begin{frame}{RabbitMQ}
+	\begin{itemize}
+		\item Message broker implementující AMQP protokol.
+		\item Usnadňuje komunikaci mezi aplikacemi nebo jejich částmi.
+		\item Řeší problém výměny zpráv mezi producenty a konzumenty:
+		\begin{itemize}
+			\item [\textendash] Implementuje systém front zpráv.
+			\item [\textendash] Exchanges (výměníky) jsou kompononenty zodpovědné za směrování zpráv 					  do správných front.
+		\end{itemize}
+	\end{itemize}
 
+\end{frame}
+
+\begin{frame}{Výhody RabbitMQ}
+	\begin{itemize}
+		\item Mezi hlavní výhody patří:
+			\begin{itemize}
+				\item [\textendash] Producenti nemusí čekat na zpracování zpráv (decoupling).
+				\item [\textendash] Broker umožní jednodušší přidávání producentů nebo											  konzumentů (škálování).
+				\item [\textendash] Samotný broker může pracovat na samostatném zařízení (výkon).
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Typy výměníků}
+	\begin{columns}
+    % Left column for bullet points
+    \begin{column}{0.2\textwidth}
+      \begin{itemize}
+        \item Fanout
+        \item Direct
+        \item Topic
+        \item Header
+      \end{itemize}
+    \end{column}
+    
+    % Right column for image
+    \begin{column}{0.8\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{rabbitmq.png}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Funkce a vlastnosti}
+	\begin{itemize}
+		\item Spolehlivost - zajištění neztracení zpráv.
+		\item Flexibilita - Podpora různých protokolů (AMQP, MQTT, STOMP...).
+		\item Škálovatelnost - jednoduchost rozšíření objemu zpracovávaných zpráv.
+		\item Pluggability - jednoduchost rozšíření funkcionality.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Použití RabbitMQ}
+	\begin{itemize}
+		\item Asynchronní zpracování úloh
+		\begin{itemize}
+			\item [\textendash] Decoupling umožňuje zpracování úloh asynchronně bez nutnosti blokování producenta.
+		\end{itemize}
+		\item Load balancing
+		\begin{itemize}
+			\item [\textendash] Rozložení zátěže mezi více konzumenty.
+		\end{itemize}
+		\item Zpracování dat v reálném čase
+		\begin{itemize}
+			\item [\textendash] Monitoring, logování...
+		\end{itemize}
+		\item Příklady použití: Instagram, Reddit, SoundCloud...
+	\end{itemize}
 \end{frame}
 
 \subsection{Další nástroje}
