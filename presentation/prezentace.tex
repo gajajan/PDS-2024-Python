@@ -216,12 +216,14 @@
         \item Modul poskytuje mnoho synchronizačních nástrojů
     \end{itemize}
     \scriptsize
-    \begin{semiverbatim}
-    t = threading.Thread(target=some_function, args=(some_arg,))
-    t.start()
-    # Nějaký kód
-    t.join()
-    \end{semiverbatim}
+
+    % t = threading.Thread(target=some_function, args=(some_arg,))
+    % t.start()
+    % # Nějaký kód
+    % t.join()
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{obrazky/codes/carbon1.png}
+    \end{center}
 \end{frame}
 
 \begin{frame}[fragile]{Lock}
@@ -238,14 +240,16 @@
             \item Varianta \textbf{RLock} pro rekurzivní funkce
     \end{itemize}
     \scriptsize
-    \begin{semiverbatim}
-    lock = threading.Lock()
 
-    def function():
-	    # Nějaký kód
-	    with lock:  
-	        # Další kód
-    \end{semiverbatim}
+    % lock = threading.Lock()
+    %
+    % def function():
+	%     # Nějaký kód
+	%     with lock:  
+	%         # Další kód
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{obrazky/codes/carbon2.png}
+    \end{center}
 \end{frame}
 
 \begin{frame}[fragile]{Semaphore}
@@ -260,14 +264,15 @@
         \item Opět with statement dělá automaticky
     \end{itemize}
     \scriptsize
-    \begin{semiverbatim}
-    sem = threading.Semaphore(limit)
-
-    def function():
-        # Nějaký kód
-        with sem:
-            # kritická sekce
-    \end{semiverbatim}
+    % sem = threading.Semaphore(limit)
+    %
+    % def function():
+    %    # Nějaký kód
+    %    with sem:
+    %        # kritická sekce
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{obrazky/codes/carbon3.png}
+    \end{center}
 \end{frame}
 
 \begin{frame}[fragile]{Barrier}
@@ -280,14 +285,16 @@
         \item \textit{wait()} – Místo, kde se vlákno zastaví, dokud ostatní vlákna k němu nedojdou
     \end{itemize}
     \scriptsize
-    \begin{semiverbatim}
-    barrier = threading.Barrier(limit)
 
-    def function():
-        # Nějaký kód
-        barrier.wait()
-        # Další kód
-    \end{semiverbatim}
+    % barrier = threading.Barrier(limit)
+    %
+    % def function():
+    %     # Nějaký kód
+    %     barrier.wait()
+    %     # Další kód
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{obrazky/codes/carbon4.png}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Event}
@@ -303,19 +310,20 @@
 \end{frame}
 
 \begin{frame}[fragile]{Event}
-    \begin{semiverbatim}
-    event = threading.Event()
-
-    def function1():
-    	# Nějaký kód
-    	event.wait()
-    	# Další kód
-    
-    def function2():
-    	# Nějaký kód
-    	event.set()
-    	# Další kód  
-    \end{semiverbatim}
+    % event = threading.Event()
+    %
+    % def function1():
+    % 	# Nějaký kód
+    % 	event.wait()
+    % 	# Další kód
+    %
+    % def function2():
+    % 	# Nějaký kód
+    % 	event.set()
+    % 	# Další kód
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{obrazky/codes/carbon5.png}
+    \end{center}
 \end{frame}
 
 \begin{frame}[fragile]{Condition}
@@ -328,21 +336,23 @@
         \item \textit{notify\_all()} – odblokuje všechna čekající vlákna
     \end{itemize}
     \scriptsize
-    \begin{semiverbatim}
-    cond = threading.Condition()
 
-    def function1():
-    	with cond:
-    		# Nějaký kód
-    		cond.wait()
-    		# Další kód
-    
-    def function2():
-    	with cond:
-    		# Nějaký kód
-    		cond.notify()
-    		# Další kód
-    \end{semiverbatim}
+    % cond = threading.Condition()
+    %
+    % def function1():
+    % 	with cond:
+    % 		# Nějaký kód
+    % 		cond.wait()
+    % 		# Další kód
+    % 
+    % def function2():
+    % 	with cond:
+    % 		# Nějaký kód
+    % 		cond.notify()
+    % 		# Další kód
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{obrazky/codes/carbon6.png}
+    \end{center}
 \end{frame}
 
 \subsection{Knihovna multiprocessing}
@@ -378,10 +388,12 @@
         \end{itemize}
     \end{itemize}
     \scriptsize
-    \begin{semiverbatim}
-    pool = Pool(processes=num_of_processes) 
-    result = pool.map(some_function, iterable_data)
-    \end{semiverbatim}  
+
+    % pool = Pool(processes=num_of_processes) 
+    % result = pool.map(some_function, iterable_data)
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{obrazky/codes/carbon7.png}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Data a komunikace}
@@ -408,30 +420,31 @@
 
 \begin{frame}[fragile]{Data a komunikace}
     \scriptsize
-    \begin{semiverbatim}
-    value = Value('i', init_value)  
-    result = Array('i', size)
-    
-    def example_function(data,value,result):  
-        for i, num in range(5):  
-            result[i] = num * num  
-            value.value += num
-
-    q = multiprocessing.Queue()
-    conn1, conn2 = multiprocessing.Pipe()
-
-    def producer(conn,q):
-        q.put("Queue Message")
-        conn.send("Pipe Message")
-        conn.close()
-
-    def consumer(conn,q):
-        msg = q.get()
-        print(msg)
-        msg = conn.recv()
-        print(msg)
-        conn.close()
-    \end{semiverbatim}
+    % value = Value('i', init_value)  
+    % result = Array('i', size)
+    % 
+    % def example_function(data,value,result):  
+    %     for i, num in range(5):  
+    %         result[i] = num * num  
+    %         value.value += num
+    % 
+    % q = multiprocessing.Queue()
+    % conn1, conn2 = multiprocessing.Pipe()
+    % 
+    % def producer(conn,q):
+    %     q.put("Queue Message")
+    %     conn.send("Pipe Message")
+    %     conn.close()
+    % 
+    % def consumer(conn,q):
+    %     msg = q.get()
+    %     print(msg)
+    %     msg = conn.recv()
+    %     print(msg)
+    %     conn.close()
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{obrazky/codes/carbon8.png}
+    \end{center}
 \end{frame}
 
 \subsection{Knihovna asyncio}
@@ -473,18 +486,19 @@
 
 \begin{frame}[fragile]{Třída Task}
     \scriptsize
-    \begin{semiverbatim}
-    async def coroutine(): 
-    	do_something()
-    	# Simulace nějaké I/O operace, na kterou je potřeba počkat
-    	await asyncio.sleep(1) 
-
-    async def main():
-        task = asyncio.create_task(coroutine(arg))
-        await task
-
-    asyncio.run(main())
-    \end{semiverbatim}
+    % async def coroutine(): 
+    % 	do_something()
+    % 	# Simulace nějaké I/O operace, na kterou je potřeba počkat
+    % 	await asyncio.sleep(1) 
+    % 
+    % async def main():
+    %     task = asyncio.create_task(coroutine(arg))
+    %     await task
+    % 
+    % asyncio.run(main())
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{obrazky/codes/carbon9.png}
+    \end{center}
 \end{frame}
 
 
@@ -582,14 +596,15 @@
 \end{frame}
 
 \begin{frame}{Knihovna socket - tvorba socketu}
-    \begin{semiverbatim}
-    import socket
-
-    socket = socket.socket(
-    	family=AF\_INET,
-    	type=SOCK\_STREAM
-    )
-    \end{semiverbatim}
+    % import socket
+    % 
+    % socket = socket.socket(
+    % 	family=AF\_INET,
+    % 	type=SOCK\_STREAM
+    % )
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{obrazky/codes/carbon10.png}
+    \end{center}
 	\begin{itemize}
 		\item \texttt{family}  - určuje, jaký protokol se použije na síťové vrstvě.
 		\begin{itemize}
@@ -606,25 +621,27 @@
 \end{frame}
 
 \begin{frame}{Knihovna socket - odeslání zprávy}
-    \begin{semiverbatim}
-	s.connect(('localhost', 12345)) \# navázání spojení
-	s.sendall(b'Ahoj!') \# odešle všechna data
-	s.close() \# ukončí socket s
-    \end{semiverbatim}
+	% s.connect(('localhost', 12345)) \# navázání spojení
+	% s.sendall(b'Ahoj!') \# odešle všechna data
+	% s.close() \# ukončí socket s
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{obrazky/codes/carbon11.png}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Knihovna socket - poslouchání  a přijímání dat}
-    \begin{semiverbatim}
-	addr = ('localhost', 12345) \# adresa na které posloucháme
-	s.bind(addr) \ přiřadí socket k adrese
-	s.listen() \ umožňuje přijímat příchozí připojení
-	conn, addr = s.accept() \ čeká se na příchozí připojení
-	print(f'Připojeno: {addr}')
-	data = conn.recv(1024) \ přijme data, max. 1024B
-	conn.sendall(b'Ahoj!') \ pošle odpověď
-	conn.close() \ ukončí socket conn
-	s.close() \ ukončí socket s
-    \end{semiverbatim}
+	% addr = ('localhost', 12345) \# adresa na které posloucháme
+	% s.bind(addr) \# přiřadí socket k adrese
+	% s.listen() \# umožňuje přijímat příchozí připojení
+	% conn, addr = s.accept() \# čeká se na příchozí připojení
+	% print(f'Připojeno: {addr}')
+	% data = conn.recv(1024) \# přijme data, max. 1024B
+	% conn.sendall(b'Ahoj!') \# pošle odpověď
+	% conn.close() \# ukončí socket conn
+	% s.close() \# ukončí socket s
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{obrazky/codes/carbon12.png}
+    \end{center}
 \end{frame}
 
 \subsection{Knihovna http.server}
@@ -648,19 +665,20 @@
 	\end{itemize}	
 \end{frame}
 \begin{frame}{Knihovna http.server}
-    \begin{semiverbatim}
-	from http.server import HTTPServer, BaseHTTPRequestHandler
-
-	class MyHandler(BaseHTTPRequestHandler):
-
-		 \# Definujeme metodu pro zpracování GET požadavků
-		def do\_GET(self):
-			pass
-
-	server = HTTPServer(("localhost", 8000), MyHandler)
-	print("Server bezi na portu 8000...")
-	server.serve\_forever()
-    \end{semiverbatim}
+	% from http.server import HTTPServer, BaseHTTPRequestHandler
+    % 
+	% class MyHandler(BaseHTTPRequestHandler):
+    % 
+	% 	 \# Definujeme metodu pro zpracování GET požadavků
+	% 	def do\_GET(self):
+	% 		pass
+    % 
+	% server = HTTPServer(("localhost", 8000), MyHandler)
+	% print("Server bezi na portu 8000...")
+	% server.serve\_forever()
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{obrazky/codes/carbon13.png}
+    \end{center}
 
 	\begin{itemize}
 		\item Dva typy serverů:
@@ -677,16 +695,17 @@
 \end{frame}
 
 \begin{frame}{Knihovna http.server}
-    \begin{semiverbatim}
-	def do\_GET(self):
-		\# Odeslání odpovědi s kódem 200 (OK)
-		self.send\_response(200)
-		\# Nastavení hlavičky Content-Type pro HTML obsah
-		self.send\_header("Content-type", "text/html") 
-		self.end\_headers()
-		\# Odeslání těla odpovědi – text "Hello, World!"     
-		self.wfile.write(b"Hello, World!") 
-    \end{semiverbatim}
+	% def do\_GET(self):
+	% 	\# Odeslání odpovědi s kódem 200 (OK)
+	% 	self.send\_response(200)
+	% 	\# Nastavení hlavičky Content-Type pro HTML obsah
+	% 	self.send\_header("Content-type", "text/html") 
+	% 	self.end\_headers()
+	% 	\# Odeslání těla odpovědi – text "Hello, World!"     
+	% 	self.wfile.write(b"Hello, World!")
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{obrazky/codes/carbon14.png}
+    \end{center}
 \end{frame}
 
 \subsection{RabbitMQ}
